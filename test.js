@@ -5,7 +5,7 @@ const app = require('./album')
 const body = require('./testSample')
 
 describe('Photo Album', () => {
-  describe('Photo Album with invalid params', () => {
+  describe('Photo Album with ERROR: invalid params', () => {
     beforeEach(() => {
       sinon.spy(console, 'log')
     })
@@ -15,12 +15,22 @@ describe('Photo Album', () => {
     it('should error when albumId < 1', () => {
       app('0')
       expect(console.log.calledOnce).to.be.true
-      expect(console.log.calledWith('invalid argument, please enter number between 1 and 100')).to.be.true
+      expect(console.log.calledWith('ERROR: invalid argument, please enter integer between 1 and 100')).to.be.true
     })
     it('should error when albumId < 100', () => {
       app('101')
       expect(console.log.calledOnce).to.be.true
-      expect(console.log.calledWith('invalid argument, please enter number between 1 and 100')).to.be.true
+      expect(console.log.calledWith('ERROR: invalid argument, please enter integer between 1 and 100')).to.be.true
+    })
+    it('should error with albumId containing characters', () => {
+      app('abc123')
+      expect(console.log.calledOnce).to.be.true
+      expect(console.log.calledWith('ERROR: invalid argument, please enter integer between 1 and 100')).to.be.true
+    })
+    it('should error with albumId containing floats', () => {
+      app('1.2')
+      expect(console.log.calledOnce).to.be.true
+      expect(console.log.calledWith('ERROR: invalid argument, please enter integer between 1 and 100')).to.be.true
     })
   })
 

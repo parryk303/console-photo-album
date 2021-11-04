@@ -1,13 +1,24 @@
 const request = require('request')
+const arg = process.argv[2]
+
+const isValidArg = (arg) => {
+  if (arg > 0 && arg < 100 && !/\D/.test(arg)) {
+    return true
+  }
+  return false
+}
 
 const album = (albumId) => {
-    albumId > 0 && albumId < 100 ?
-      request.get(
-        'https://jsonplaceholder.typicode.com/photos?albumId=' + process.argv[2],
-        (err, res, body) => JSON.parse(body).forEach(photo => console.log(`[ ${photo.id} ] ${photo.title}`))
-      )
-      :
-      console.log('invalid argument, please enter number between 1 and 100')
+  isValidArg(albumId) ?
+    request.get(
+      'https://jsonplaceholder.typicode.com/photos?albumId=' + arg,
+      (err, res, body) =>
+      JSON.parse(body).forEach(photo =>
+        console.log(`[ ${photo.id} ] ${photo.title}`)))
+    :
+    console.log('ERROR: invalid argument, please enter integer between 1 and 100')
 }
+
+album(arg)
 
 module.exports = album
