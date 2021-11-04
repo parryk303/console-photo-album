@@ -1,8 +1,28 @@
 const expect = require('chai').expect
 const request = require('request')
+const chalk = require('chalk')
 const sinon = require('sinon')
-const app = require('./album')
 const body = require('./testSample')
+const boxen = require('boxen')
+const app = require('./album')
+
+const invalidOptions = {
+  padding: 1,
+  margin: 0,
+  borderStyle: 'double',
+  borderColor: 'red',
+}
+
+const validOptions = {
+  padding: 1,
+  margin: 0,
+  borderStyle: 'double',
+  borderColor: 'green',
+}
+
+const error = chalk.red.bold('ERROR: ')
+const message = chalk.white.bold('invalid argument, please enter integer between 1 and 100')
+const errorMessage = boxen(error + message, invalidOptions)
 
 describe('Photo Album', () => {
   describe('Photo Album with ERROR: invalid params', () => {
@@ -15,22 +35,22 @@ describe('Photo Album', () => {
     it('should error when albumId < 1', () => {
       app('0')
       expect(console.log.calledOnce).to.be.true
-      expect(console.log.calledWith('ERROR: invalid argument, please enter integer between 1 and 100')).to.be.true
+      expect(console.log.calledWith(errorMessage)).to.be.true
     })
     it('should error when albumId < 100', () => {
       app('101')
       expect(console.log.calledOnce).to.be.true
-      expect(console.log.calledWith('ERROR: invalid argument, please enter integer between 1 and 100')).to.be.true
+      expect(console.log.calledWith(errorMessage)).to.be.true
     })
     it('should error with albumId containing characters', () => {
       app('abc123')
       expect(console.log.calledOnce).to.be.true
-      expect(console.log.calledWith('ERROR: invalid argument, please enter integer between 1 and 100')).to.be.true
+      expect(console.log.calledWith(errorMessage)).to.be.true
     })
     it('should error with albumId containing floats', () => {
       app('1.2')
       expect(console.log.calledOnce).to.be.true
-      expect(console.log.calledWith('ERROR: invalid argument, please enter integer between 1 and 100')).to.be.true
+      expect(console.log.calledWith(errorMessage)).to.be.true
     })
   })
 
@@ -54,22 +74,24 @@ describe('Photo Album', () => {
       done()
     })
     it('should have the arguments for the first log', done => {
+      const id = chalk.cyan.bold('[1] ')
+      const title = chalk.white.bold('accusamus beatae ad facilis cum similique qui sunt')
+      const info = boxen(id + title, validOptions)
       sinon.spy(console, 'log')
       app('1')
       expect(
-        console.log.firstCall.calledWith(
-          '[ 1 ] accusamus beatae ad facilis cum similique qui sunt'
-        )
+        console.log.firstCall.calledWith(info)
       ).to.be.true
       done()
     })
     it('should have the arguments for the last log', done => {
+      const id = chalk.cyan.bold('[50] ')
+      const title = chalk.white.bold('et inventore quae ut tempore eius voluptatum')
+      const info = boxen(id + title, validOptions)
       sinon.spy(console, 'log')
       app('1')
       expect(
-        console.log.lastCall.calledWith(
-          '[ 50 ] et inventore quae ut tempore eius voluptatum'
-        )
+        console.log.lastCall.calledWith(info)
       ).to.be.true
       done()
     })
