@@ -9,8 +9,12 @@ A Node.js console app to display photo albums from JSON Placeholder API https://
 npm i
 ```
 ```
-npm run dev
+node album <Album ID (Integer between 1 - 100)>
 ```
+```
+Example: node album 1
+```
+![console-photo-album](./example.png)
 
 # Testing
 > Run the following commands from the root of this repository
